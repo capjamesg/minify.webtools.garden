@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <style>
+        body {
+            background-color: #f7f7f7;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        article, footer, nav {
+            max-width: 40em;
+            margin: auto;
+        }
+        a, h1, h2, h3 {
+            color: rgb(0, 128, 64);
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1em 0;
+        }
+        input {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 0.5em;
+            font-size: 1em;
+        }
+        input:focus {
+            outline: none;
+            border-color: rgb(0, 128, 64);
+        }
+        button {
+            background-color: rgb(0, 128, 64);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 0.5em 1em;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        article {
+            border-bottom: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/">minify.webtools.garden</a>
+        {% if url %}
+            <a href="{{url}}">Original</a>
+        {% endif %}
+        <search>
+            <form action="/" method="GET">
+                <input type="url" name="url" placeholder="Search">
+                <button type="submit">Load</button>
+            </form>
+        </search>
+    </nav>
+    <article>
+        {% if error %}
+            <p>{{error}}</p>
+        {% endif %}
+        {% if not content %}
+            <p>Enter a URL to get started.</p>
+        {% endif %}
+        {{content|safe}}
+    </article>
+    <footer>
+        <p>Made by <a href="https://jamesg.blog">capjamesg</a>. <a href="https://github.com/capjamesg/minify.webtools.garden">Read the source code</a>.</p>
+    </footer>
+    <script>
+        // https://aaronparecki.com/2018/06/03/4/url-form-field
+        document.addEventListener('DOMContentLoaded', function() {
+            function addDefaultScheme(target) {
+            if(target.value.match(/^(?!https?:).+\..+/)) {
+                target.value = "http://"+target.value;
+            }
+            }
+            var elements = document.querySelectorAll("input[type=url]");
+            Array.prototype.forEach.call(elements, function(el, i){
+            el.addEventListener("blur", function(e){
+                addDefaultScheme(e.target);
+            });
+            el.addEventListener("keydown", function(e){
+                if(e.keyCode == 13) {
+                addDefaultScheme(e.target);
+                }
+            });
+            });
+        });
+    </script>
+</body>
+</html>
